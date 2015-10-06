@@ -1,0 +1,2 @@
+defmodule Course do
+end
