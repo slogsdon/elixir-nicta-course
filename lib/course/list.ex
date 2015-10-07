@@ -17,15 +17,15 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> headOr 3 (1 :. 2 :. Nil)
+      iex> head_or([1,2,3], 3)
       1
 
-      iex> headOr 3 Nil
+      iex> head_or([], 3)
       3
   """
-  @spec headOr(List.t, term) :: term
-  def headOr(list, default) do
-    raise "todo: Course.List#headOr"
+  @spec head_or(List.t, term) :: term
+  def head_or(list, default) do
+    raise "todo: Course.List#head_or"
   end
 
   @doc """
@@ -33,10 +33,10 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> product (1 :. 2 :. 3 :. Nil)
+      iex> product [1,2,3]
       6
 
-      iex> product (1 :. 2 :. 3 :. 4 :. Nil)
+      iex> product [1,2,3,4]
       24
   """
   @spec product([integer]) :: integer
@@ -49,10 +49,10 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> sum (1 :. 2 :. 3 :. Nil)
+      iex> sum [1,2,3]
       6
 
-      iex> sum (1 :. 2 :. 3 :. 4 :. Nil)
+      iex> sum [1,2,3,4]
       10
   """
   @spec sum([integer]) :: integer
@@ -65,7 +65,7 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> length (1 :. 2 :. 3 :. Nil)
+      iex> length [1,2,3]
       3
   """
   @spec length(List.t) :: integer
@@ -78,7 +78,7 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> map (+10) (1 :. 2 :. 3 :. Nil)
+      iex> map([1,2,3], &(&1 + 10))
       [11,12,13]
   """
   @spec map(List.t, (term -> term)) :: List.t
@@ -91,7 +91,7 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> filter even (1 :. 2 :. 3 :. 4 :. 5 :. Nil)
+      iex> filter([1,2,3,4,5], &(&1 % 2 == 0))
       [2,4]
   """
   @spec filter(List.t, (term -> boolean)) :: List.t
@@ -104,12 +104,12 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> (1 :. 2 :. 3 :. Nil) ++ (4 :. 5 :. 6 :. Nil)
+      iex> append([1,2,3], [4,5,6])
       [1,2,3,4,5,6]
   """
   @spec append(List.t, List.t) :: List.t
   def append(left, right) do
-    raise "todo: Course.List#(++)"
+    raise "todo: Course.List#append"
   end
 
   @doc """
@@ -117,10 +117,10 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> flatten ((1 :. 2 :. 3 :. Nil) :. (4 :. 5 :. 6 :. Nil) :. (7 :. 8 :. 9 :. Nil) :. Nil)
+      iex> flatten([[1,2,3],[4,5,6],[7,8,9]])
       [1,2,3,4,5,6,7,8,9]
   """
-  @spec flatten([List.t]) :: List.
+  @spec flatten([List.t]) :: List.t
   def flatten(list) do
     raise "todo: Course.List#flatten"
   end
@@ -130,52 +130,50 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> flatMap (\x -> x :. x + 1 :. x + 2 :. Nil) (1 :. 2 :. 3 :. Nil)
+      iex> flat_map([1,2,3], &([&1,&1+1,&1+2]))
       [1,2,3,2,3,4,3,4,5]
   """
   @spec flat_map(List.t, (term -> List.t)) :: List.t
   def flat_map(list, fun) do
-    raise "todo: Course.List#flatMap"
+    raise "todo: Course.List#flat_map"
   end
 
   @doc """
   Flatten a list of lists to a list (again).
-  HOWEVER, this time use the /flatMap/ function that you just wrote.
+
+  HOWEVER, this time use the `flat_map/2` function that you just wrote.
   """
   @spec flatten_again([List.t]) :: List.t
   def flatten_again(list) do
-    raise "todo: Course.List#flattenAgain"
+    raise "todo: Course.List#flatten_again"
   end
 
   @doc """
   Convert a list of optional values to an optional list of values.
 
-  * If the list contains all `Full` values,
-    then return `Full` list of values.
+  * If the list contains all `{:ok, term}` values,
+    then return `{:ok, term}` list of values.
 
-  * If the list contains one or more `Empty` values,
-    then return `Empty`.
+  * If the list contains one or more `:erro` values,
+    then return `:error`.
 
-  * The only time `Empty` is returned is
-    when the list contains one or more `Empty` values.
+  * The only time `:error` is returned is
+    when the list contains one or more `:error` values.
 
   ## Examples
 
-      iex> seqOptional (Full 1 :. Full 10 :. Nil)
-      Full [1,10]
+      iex> seq_optional([{:ok, 1},{:ok, 10}])
+      {:ok, [1,10]}
 
-      iex> seqOptional Nil
-      Full []
+      iex> seq_optional([])
+      {:ok, []}
 
-      iex> seqOptional (Full 1 :. Full 10 :. Empty :. Nil)
-      Empty
-
-      iex> seqOptional (Empty :. map Full infinity)
-      Empty
+      iex> seq_optional([{:ok, 1},{:ok, 10},:error])
+      :error
   """
   @spec seq_optional([optional(term)]) :: optional(List.t)
   def seq_optional(list) do
-    raise "todo: Course.List#seqOptional"
+    raise "todo: Course.List#seq_optional"
   end
 
   @doc """
@@ -183,20 +181,17 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> find even (1 :. 3 :. 5 :. Nil)
-      Empty
+      iex> find([1,3,5], %(%1 % 2 == 0))
+      nil
 
-      iex> find even Nil
-      Empty
+      iex> find([], %(%1 % 2 == 0))
+      nil
 
-      iex> find even (1 :. 2 :. 3 :. 5 :. Nil)
-      Full 2
+      iex> find([1,2,3,5], %(%1 % 2 == 0))
+      2
 
-      iex> find even (1 :. 2 :. 3 :. 4 :. 5 :. Nil)
-      Full 2
-
-      iex> find (const True) infinity
-      Full 0
+      iex> find([1,2,3,4,5], %(%1 % 2 == 0))
+      2
   """
   @spec find(List.t, (term -> boolean)) :: optional(term)
   def find(list, fun) do
@@ -208,21 +203,18 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> lengthGT4 (1 :. 3 :. 5 :. Nil)
-      False
+      iex> length_gt4([1,3,5])
+      false
 
-      iex> lengthGT4 Nil
-      False
+      iex> length_gt4([])
+      false
 
-      iex> lengthGT4 (1 :. 2 :. 3 :. 4 :. 5 :. Nil)
-      True
-
-      iex> lengthGT4 infinity
-      True
+      iex> length_gt4([1,2,3,4,5])
+      true
   """
   @spec length_gt4(List.t) :: boolean
   def length_gt4(list) do
-    raise "todo: Course.List#lengthGT4"
+    raise "todo: Course.List#length_gt4"
   end
 
   @doc """
@@ -230,11 +222,11 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> reverse Nil
+      iex> reverse([])
       []
 
-      iex> take 1 (reverse (reverse largeList))
-      [1]
+      iex> reverse([1,2,3,4,5,6])
+      [6,5,4,3,2,1]
   """
   @spec reverse(List.t) :: List.t
   def reverse(list) do
@@ -247,10 +239,10 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> let (x:.y:.z:.w:._) = produce (+1) 0 in [x,y,z,w]
+      iex> [x,y,z,w|_] = produce(0, &(&1 + 1))
       [0,1,2,3]
 
-      iex> let (x:.y:.z:.w:._) = produce (*2) 1 in [x,y,z,w]
+      iex> [x,y,z,w|_] = produce(1, &(&1 * 2))
       [1,2,4,8]
   """
   @spec produce(term, (term -> term)) :: List.t
@@ -264,8 +256,8 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> notReverse Nil
-  []
+      iex> not_reverse([])
+      []
   """
   @spec not_reverse(List.t) :: List.t
   def not_reverse(list) do
