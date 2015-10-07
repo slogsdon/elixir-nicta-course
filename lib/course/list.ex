@@ -24,9 +24,9 @@ defmodule Course.List do
       3
   """
   @spec head_or(List.t, term) :: term
-  def head_or(list, default) do
-    raise "todo: Course.List#head_or"
-  end
+  def head_or(list, default)
+  def head_or([], default), do: default
+  def head_or([h|_], _), do: h
 
   @doc """
   The product of the elements of a list.
@@ -41,7 +41,7 @@ defmodule Course.List do
   """
   @spec product([integer]) :: integer
   def product(list) do
-    raise "todo: Course.List#product"
+    list |> foldl(1, &Kernel.*/2)
   end
 
   @doc """
@@ -57,7 +57,7 @@ defmodule Course.List do
   """
   @spec sum([integer]) :: integer
   def sum(list) do
-    raise "todo: Course.List#sum"
+    list |> foldl(0, &Kernel.+/2)
   end
 
   @doc """
@@ -70,7 +70,7 @@ defmodule Course.List do
   """
   @spec length(List.t) :: integer
   def length(list) do
-    raise "todo: Course.List#length"
+    list |> foldl(0, fn _, acc -> acc + 1 end)
   end
 
   @doc """
@@ -83,7 +83,7 @@ defmodule Course.List do
   """
   @spec map(List.t, (term -> term)) :: List.t
   def map(list, fun) do
-    raise "todo: Course.List#map"
+    list |> foldr([], fn x, acc -> [fun.(x)|acc] end)
   end
 
   @doc """
@@ -97,7 +97,13 @@ defmodule Course.List do
   """
   @spec filter(List.t, (term -> boolean)) :: List.t
   def filter(list, fun) do
-    raise "todo: Course.List#filter"
+    f = fn x, acc ->
+      case fun.(x) do
+        true -> [x|acc]
+        false -> acc
+      end
+    end
+    list |> foldr([], f)
   end
 
   @doc """
@@ -110,7 +116,7 @@ defmodule Course.List do
   """
   @spec append(List.t, List.t) :: List.t
   def append(left, right) do
-    raise "todo: Course.List#append"
+    left |> foldr(right, &([&1|&2]))
   end
 
   @doc """
@@ -123,7 +129,7 @@ defmodule Course.List do
   """
   @spec flatten([List.t]) :: List.t
   def flatten(list) do
-    raise "todo: Course.List#flatten"
+    list |> foldr([], &append/2)
   end
 
   @doc """
@@ -136,7 +142,9 @@ defmodule Course.List do
   """
   @spec flat_map(List.t, (term -> List.t)) :: List.t
   def flat_map(list, fun) do
-    raise "todo: Course.List#flat_map"
+    list
+    |> map(fun)
+    |> flatten
   end
 
   @doc """
@@ -146,7 +154,7 @@ defmodule Course.List do
   """
   @spec flatten_again([List.t]) :: List.t
   def flatten_again(list) do
-    raise "todo: Course.List#flatten_again"
+    list |> flat_map(&(&1))
   end
 
   @doc """
@@ -174,7 +182,12 @@ defmodule Course.List do
   """
   @spec seq_optional([optional(term)]) :: optional(List.t)
   def seq_optional(list) do
-    raise "todo: Course.List#seq_optional"
+    f = fn
+      x, acc when :error in [x, acc] -> :error
+      {:ok, x}, {:ok, acc} ->
+        {:ok, [x|acc]}
+    end
+    list |> foldr({:ok, []}, f)
   end
 
   @doc """
@@ -200,7 +213,9 @@ defmodule Course.List do
   """
   @spec find(List.t, (term -> boolean)) :: optional(term)
   def find(list, fun) do
-    raise "todo: Course.List#find"
+    list
+    |> filter(fun)
+    |> head_or(nil)
   end
 
   @doc """
@@ -218,9 +233,8 @@ defmodule Course.List do
       true
   """
   @spec length_gt4(List.t) :: boolean
-  def length_gt4(list) do
-    raise "todo: Course.List#length_gt4"
-  end
+  def length_gt4([_,_,_,_|_]), do: true
+  def length_gt4(_), do: false
 
   @doc """
   Reverse a list.
@@ -235,7 +249,7 @@ defmodule Course.List do
   """
   @spec reverse(List.t) :: List.t
   def reverse(list) do
-    raise "todo: Course.List#reverse"
+    list |> foldl([], &([&1|&2]))
   end
 
   @doc """
@@ -249,6 +263,6 @@ defmodule Course.List do
   """
   @spec not_reverse(List.t) :: List.t
   def not_reverse(list) do
-    raise "todo: Is it even possible?"
+    list |> reverse
   end
 end
