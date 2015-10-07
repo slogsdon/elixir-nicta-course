@@ -33,10 +33,10 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> product [1,2,3]
+      iex> product([1,2,3])
       6
 
-      iex> product [1,2,3,4]
+      iex> product([1,2,3,4])
       24
   """
   @spec product([integer]) :: integer
@@ -49,10 +49,10 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> sum [1,2,3]
+      iex> sum([1,2,3])
       6
 
-      iex> sum [1,2,3,4]
+      iex> sum([1,2,3,4])
       10
   """
   @spec sum([integer]) :: integer
@@ -65,7 +65,7 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> length [1,2,3]
+      iex> length([1,2,3])
       3
   """
   @spec length(List.t) :: integer
@@ -91,7 +91,8 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> filter([1,2,3,4,5], &(&1 % 2 == 0))
+      iex> require Integer
+      iex> filter([1,2,3,4,5], &Integer.is_even/1)
       [2,4]
   """
   @spec filter(List.t, (term -> boolean)) :: List.t
@@ -154,7 +155,7 @@ defmodule Course.List do
   * If the list contains all `{:ok, term}` values,
     then return `{:ok, term}` list of values.
 
-  * If the list contains one or more `:erro` values,
+  * If the list contains one or more `:error` values,
     then return `:error`.
 
   * The only time `:error` is returned is
@@ -181,16 +182,20 @@ defmodule Course.List do
 
   ## Examples
 
-      iex> find([1,3,5], %(%1 % 2 == 0))
+      iex> require Integer
+      iex> find([1,3,5], &Integer.is_even/1)
       nil
 
-      iex> find([], %(%1 % 2 == 0))
+      iex> require Integer
+      iex> find([], &Integer.is_even/1)
       nil
 
-      iex> find([1,2,3,5], %(%1 % 2 == 0))
+      iex> require Integer
+      iex> find([1,2,3,5], &Integer.is_even/1)
       2
 
-      iex> find([1,2,3,4,5], %(%1 % 2 == 0))
+      iex> require Integer
+      iex> find([1,2,3,4,5], &Integer.is_even/1)
       2
   """
   @spec find(List.t, (term -> boolean)) :: optional(term)
@@ -231,23 +236,6 @@ defmodule Course.List do
   @spec reverse(List.t) :: List.t
   def reverse(list) do
     raise "todo: Course.List#reverse"
-  end
-
-  @doc """
-  Produce an infinite `List` that seeds with the given value at its head,
-  then runs the given function for subsequent elements
-
-  ## Examples
-
-      iex> [x,y,z,w|_] = produce(0, &(&1 + 1))
-      [0,1,2,3]
-
-      iex> [x,y,z,w|_] = produce(1, &(&1 * 2))
-      [1,2,4,8]
-  """
-  @spec produce(term, (term -> term)) :: List.t
-  def produce(start, fun) do
-    raise "todo: Course.List#produce"
   end
 
   @doc """
